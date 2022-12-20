@@ -4,13 +4,13 @@ const SelectUserName: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
   const [tempUserName, setTempUserName] = useState<string>("");
 
-  function handleClick(event: any) {
+  function handleClick(event: React.MouseEvent<HTMLInputElement>) {
     event.preventDefault();
     setUserName(tempUserName);
     setTempUserName("");
   }
 
-  function handleChange(event: any) {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setTempUserName(event.target.value);
   }
 
@@ -19,7 +19,7 @@ const SelectUserName: React.FC = () => {
       <h2>Enter your username</h2>
       <form className="form">
         <input
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
           className="textInput"
           type="text"
           placeholder="Enter your username"
