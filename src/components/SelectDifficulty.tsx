@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 
-const SelectDifficulty: React.FC = () => {
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("");
-  const difficulties: string[] = ["Easy", "Medium", "Hard", "Random"];
+interface buttonProps {
+  setSelectedDifficulty: (difficulty: string) => void;
+  selectedDifficulty: string;
+  difficulty: string[];
+}
 
+const SelectDifficulty: React.FC<buttonProps> = (props) => {
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    setSelectedDifficulty(event.currentTarget.value);
+    props.setSelectedDifficulty(event.currentTarget.value);
   }
 
-  function difficultyButtons(difficulty: string) {
+  function difficultyButtons(difficulty: string, index: number) {
     return (
-      <div className="container">
+      <div className="container" key={index}>
         <button
           className="difficultyButton"
           value={difficulty}
@@ -26,8 +29,8 @@ const SelectDifficulty: React.FC = () => {
   return (
     <>
       <h3>Please select difficulty</h3>
-      {difficulties.map((difficulty) => difficultyButtons(difficulty))}
-      <p>Your selected difficulty is: {selectedDifficulty}</p>
+      {props.difficulty.map(difficultyButtons)}
+      <p>Your selected difficulty is: {props.selectedDifficulty}</p>
     </>
   );
 };

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-const SelectCategory: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>("");
+interface buttonProps {
+  setActiveCategory: (category: string) => void;
+  activeCategory: string;
+}
+
+const SelectCategory: React.FC<buttonProps> = (props) => {
   const [threeCategoriesArray, setThreeCategoriesArray] = useState<string[]>(
     []
   );
-  const URL: string = process.env.REACT_APP_URL as string;
+  const URL = process.env.REACT_APP_URL as string;
 
   useEffect(() => {
     let tempArray: string[] = [];
@@ -27,12 +31,12 @@ const SelectCategory: React.FC = () => {
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    setActiveCategory(event.currentTarget.value);
+    props.setActiveCategory(event.currentTarget.value);
   }
 
-  function categoryButtons(category: string) {
+  function categoryButtons(category: string, index: number) {
     return (
-      <div className="buttons">
+      <div className="buttons" key={index}>
         <button onClick={handleClick} value={category}>
           {category}
         </button>
@@ -45,10 +49,10 @@ const SelectCategory: React.FC = () => {
       <>
         <h2>Select a category</h2>
         {threeCategoriesArray.length > 0
-          ? threeCategoriesArray.map((category) => categoryButtons(category))
+          ? threeCategoriesArray.map(categoryButtons)
           : "loading..."}
         <div className="activeCategory">
-          <p>Your selected category is: {activeCategory}</p>
+          <p>Your selected category is: {props.activeCategory}</p>
         </div>
       </>
     </div>

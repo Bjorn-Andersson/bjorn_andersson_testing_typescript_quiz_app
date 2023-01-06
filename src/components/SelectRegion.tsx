@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 
-const SelectRegion: React.FC = () => {
-  const [selectedRegion, setSelectedRegion] = useState<string>("");
-  const regions: string[] = ["SWE", "EN"];
+interface buttonProps {
+  setSelectedRegion: (region: string) => void;
+  selectedRegion: string;
+}
+
+const SelectRegion: React.FC<buttonProps> = (props) => {
+  const regions: string[] = ["SWE", "GB"];
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    setSelectedRegion(event.currentTarget.value);
+    props.setSelectedRegion(event.currentTarget.value);
   }
 
-  function regionButtons(region: string) {
+  function regionButtons(region: string, index: number) {
     return (
-      <div className="container">
+      <div className="container" key={index}>
         <button
           className="difficultyButton"
           value={region}
@@ -25,8 +29,8 @@ const SelectRegion: React.FC = () => {
   return (
     <>
       <h3>Please select region</h3>
-      {regions.map((region) => regionButtons(region))}
-      <p>Your selected difficulty is: {selectedRegion}</p>
+      {regions.map(regionButtons)}
+      <p>Your selected region is: {props.selectedRegion}</p>
     </>
   );
 };

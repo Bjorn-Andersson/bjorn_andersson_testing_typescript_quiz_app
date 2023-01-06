@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 
-const SelectUserName: React.FC = () => {
-  const [userName, setUserName] = useState<string>("");
+interface buttonProps {
+  setUserName: (username: string) => void;
+  userName: string;
+}
+
+const SelectUserName: React.FC<buttonProps> = (props) => {
   const [tempUserName, setTempUserName] = useState<string>("");
 
   function handleClick(event: React.MouseEvent<HTMLInputElement>) {
     event.preventDefault();
-    setUserName(tempUserName);
+    props.setUserName(tempUserName);
     setTempUserName("");
   }
 
@@ -32,7 +36,7 @@ const SelectUserName: React.FC = () => {
           value="Submit"
         />
       </form>
-      {userName !== "" && <h1>Welcome {userName}!</h1>}
+      {props.userName !== "" && <h1>Welcome {props.userName}!</h1>}
     </>
   );
 };
