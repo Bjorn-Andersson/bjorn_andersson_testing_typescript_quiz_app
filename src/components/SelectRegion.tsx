@@ -26,6 +26,7 @@ const SelectRegion: React.FC<buttonProps> = (props) => {
       </div>
     );
   }
+
   return (
     <>
       <h3>Please select region</h3>
@@ -34,4 +35,5 @@ const SelectRegion: React.FC<buttonProps> = (props) => {
     </>
   );
 };
+
 export default SelectRegion;
