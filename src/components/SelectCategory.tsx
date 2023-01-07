@@ -25,8 +25,7 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
           tempArray = tempArray.concat(dataKeys.splice(randomIndex, 1));
         }
         setThreeCategoriesArray(tempArray);
-      })
-      .catch((err) => console.log(err));
+      });
   }, []);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {

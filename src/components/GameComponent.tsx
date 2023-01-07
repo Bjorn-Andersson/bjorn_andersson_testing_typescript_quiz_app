@@ -23,6 +23,7 @@ interface triviaProps {
   question: string;
   correctAnswer: string;
   incorrectAnswers: string[];
+  difficulty: string;
 }
 
 const GameComponent: React.FC<gameProps> = (props) => {
@@ -38,21 +39,51 @@ const GameComponent: React.FC<gameProps> = (props) => {
   );
 
   useEffect(() => {
-    fetch(
-      "https://the-trivia-api.com/api/questions?categories=" +
-        props.activeCategory +
-        "&limit=" +
-        props.amountOfQuestions +
-        "&region=" +
-        props.selectedRegion +
-        "&difficulty=" +
-        props.selectedDifficulty.toLowerCase()
-    )
-      ////////////////////////////////////////////////////////////////TODO fix for "Random" difficulty -> if med en fetch med en random generator for svarighetsgrad
-      .then((response) => response.json())
-      .then((data) => {
+    let difficulty = props.selectedDifficulty.toLowerCase();
+    const tempArrayOfPromises: Array<Promise<triviaProps>> = [];
+
+    if (difficulty === "random") {
+      for (let n = 0; n < 9; n++) {
+        const randNumber = Math.floor(Math.random() * 3);
+        const tempDifficultyArray = ["easy", "medium", "hard"];
+        difficulty = tempDifficultyArray[randNumber];
+
+        const addJsonToArrayPromise = fetch(
+          /////////////////////////////////////////////////////////////////////////////////////////////////fix 3 new random categories after each guess
+          "https://the-trivia-api.com/api/questions?categories=" +
+            props.activeCategory +
+            "&limit=1" +
+            "&region=" +
+            props.selectedRegion +
+            "&difficulty=" +
+            difficulty
+        )
+          .then((response): Promise<Array<triviaProps>> => response.json())
+          .then((data) => data[0]);
+
+        tempArrayOfPromises.push(addJsonToArrayPromise);
+      }
+
+      Promise.all(tempArrayOfPromises).then((data) => {
         setTrivias(data);
       });
+    } else {
+      fetch(
+        ////////////////////////////////////////////////////////////////////////////////////////////////Hittar apiet ingen fråga så ska den försöka igen tills den hittat något
+        "https://the-trivia-api.com/api/questions?categories=" +
+          props.activeCategory +
+          "&limit=" +
+          props.amountOfQuestions +
+          "&region=" +
+          props.selectedRegion +
+          "&difficulty=" +
+          difficulty
+      )
+        .then((response): Promise<Array<triviaProps>> => response.json())
+        .then((data) => {
+          setTrivias(data);
+        });
+    }
   }, []);
 
   function correctAnswer() {
@@ -61,11 +92,11 @@ const GameComponent: React.FC<gameProps> = (props) => {
     let rightGuessesInRow = correctGuessesInARow;
     let difficultyPointsAwarded = 0;
     let points = 0;
-    switch (props.selectedDifficulty.toLowerCase()) {
+    switch (trivias[increment].difficulty) {
       case "easy":
         difficultyPointsAwarded = 1;
         break;
-      case "normal":
+      case "medium":
         difficultyPointsAwarded = 3;
         break;
       case "hard":
@@ -97,6 +128,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
   }
 
   function nextQuestion() {
+    /////////////////////////////////////////////////////needs to start automatically 3 seconds after player chooses new category (after each question)
     resetCountdown();
     setIncrement(increment + 1);
     setResultText("");
@@ -120,7 +152,9 @@ const GameComponent: React.FC<gameProps> = (props) => {
 
   return (
     <>
-      {trivias.length !== 0 && (
+      {trivias.length == 0 ? (
+        "loading..."
+      ) : (
         <>
           {increment >= trivias.length ? (
             endResult()
