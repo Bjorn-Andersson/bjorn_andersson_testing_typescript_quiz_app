@@ -1,21 +1,16 @@
 const amountOfQuestions = 9;
 const timeLeftToAnswerQuestion = 30000;
-const difficulty: string[] = ["Easy", "Medium", "Hard", "Random"];
-const difficultyPoints = 1;
-const correctQuestions = 0;
-const correctQuestionsInARow = 0;
-const pointsSystem =
-  correctQuestionsInARow > 3
+
+function pointsSystem(
+  correctGuesses: number,
+  correctGuessesInARow: number,
+  timeLeftToAnswerQuestion: number,
+  difficultyPoints: number
+) {
+  return correctGuessesInARow < 3
     ? timeLeftToAnswerQuestion * difficultyPoints
     : timeLeftToAnswerQuestion * difficultyPoints +
-      correctQuestions * correctQuestionsInARow;
+        correctGuesses * correctGuessesInARow;
+}
 
-export {
-  amountOfQuestions,
-  timeLeftToAnswerQuestion,
-  difficulty,
-  difficultyPoints,
-  correctQuestions,
-  correctQuestionsInARow,
-  pointsSystem,
-};
+export { amountOfQuestions, timeLeftToAnswerQuestion, pointsSystem };

@@ -7,10 +7,6 @@ import GameComponent from "./GameComponent";
 import {
   amountOfQuestions,
   timeLeftToAnswerQuestion,
-  difficulty,
-  difficultyPoints,
-  correctQuestions,
-  correctQuestionsInARow,
   pointsSystem,
 } from "../config";
 
@@ -48,7 +44,6 @@ const Home: React.FC = () => {
         <SelectDifficulty
           setSelectedDifficulty={setSelectedDifficulty}
           selectedDifficulty={selectedDifficulty}
-          difficulty={difficulty}
         />
         <SelectRegion
           setSelectedRegion={setSelectedRegion}
@@ -58,7 +53,7 @@ const Home: React.FC = () => {
           activeCategory !== "" &&
           selectedDifficulty !== "" &&
           selectedRegion !== "" &&
-          showStartButton === true && (
+          showStartButton && (
             <input
               type="button"
               value="start"
@@ -68,6 +63,7 @@ const Home: React.FC = () => {
       </>
     );
   }
+
   return (
     <GameComponent
       userName={userName}
@@ -79,22 +75,18 @@ const Home: React.FC = () => {
       resetGame={resetGame}
       amountOfQuestions={amountOfQuestions}
       timeLeftToAnswerQuestion={timeLeftToAnswerQuestion}
-      difficultyPoints={difficultyPoints}
-      correctQuestions={correctQuestions}
-      correctQuestionsInARow={correctQuestionsInARow}
       pointsSystem={pointsSystem}
     />
   );
 };
+
 export default Home;
 
 //TODO:
-
+//EFTER VARJE FRÅGA FÅR MAN VÄLJA NY KATEGORI!!
+//3 SEKUNDERS NEDRÄKNING FÖRE VARJE NY FRÅGA
 //Hittar apiet ingen fråga så ska den försöka igen tills den hittat något
-//poäng: Sekunder som är kvar * svårighetsgrad (1 = easy, 3 = medium 5 = hard) + antal gissade rätt * antal gissade I följd om man har minst 3 rätt I följd
-//Poängsystemet, antal frågor och tid per fråga vill man kunna modifiera med en config-fil
-//Välja ny kategori efter varje fråga (3 slumpade kategorier)
-//Efter 9 frågor presenteras totalpoäng
+//RANDOM = slumpad svårighetsgrad för varje fråga
 
 //Sekvensdiagram
 //Klassdiagram

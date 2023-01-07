@@ -3,10 +3,11 @@ import React from "react";
 interface buttonProps {
   setSelectedDifficulty: (difficulty: string) => void;
   selectedDifficulty: string;
-  difficulty: string[];
 }
 
 const SelectDifficulty: React.FC<buttonProps> = (props) => {
+  const difficulties: string[] = ["Easy", "Medium", "Hard", "Random"];
+
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     props.setSelectedDifficulty(event.currentTarget.value);
@@ -29,10 +30,10 @@ const SelectDifficulty: React.FC<buttonProps> = (props) => {
   return (
     <>
       <h3>Please select difficulty</h3>
-      {props.difficulty.map(difficultyButtons)}
+      {difficulties.map(difficultyButtons)}
       <p>Your selected difficulty is: {props.selectedDifficulty}</p>
     </>
   );
 };
+
 export default SelectDifficulty;
-//easy md hrd rand - slumpar efter varje runda

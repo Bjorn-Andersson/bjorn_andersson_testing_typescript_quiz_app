@@ -58,4 +58,5 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
     </div>
   );
 };
+
 export default SelectCategory;
