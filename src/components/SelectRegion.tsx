@@ -6,7 +6,7 @@ interface buttonProps {
 }
 
 const SelectRegion: React.FC<buttonProps> = (props) => {
-  const regions: string[] = ["SWE", "GB"];
+  const regions: string[] = ["SE", "GB"];
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();

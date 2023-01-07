@@ -86,7 +86,6 @@ export default Home;
 //EFTER VARJE FRÅGA FÅR MAN VÄLJA NY KATEGORI!!
 //3 SEKUNDERS NEDRÄKNING FÖRE VARJE NY FRÅGA
 //Hittar apiet ingen fråga så ska den försöka igen tills den hittat något
-//RANDOM = slumpad svårighetsgrad för varje fråga
 
 //Sekvensdiagram
 //Klassdiagram
