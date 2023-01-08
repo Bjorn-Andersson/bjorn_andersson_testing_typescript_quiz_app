@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import useCountDown from "../hooks/useCountDown";
 import SelectCategory from "./SelectCategory";
 
@@ -6,8 +6,6 @@ interface gameProps {
   userName: string;
   selectedDifficulty: string;
   selectedRegion: string;
-  activeCategory: string;
-  setActiveCategory: (category: string) => void;
   resetGame: () => void;
   amountOfQuestions: number;
   timeLeftToAnswerQuestion: number;
@@ -28,6 +26,7 @@ interface triviaProps {
 
 const GameComponent: React.FC<gameProps> = (props) => {
   const [trivias, setTrivias] = useState<Array<triviaProps>>([]);
+  const [activeCategory, setActiveCategory] = useState<string>("");
   const [amountQuestionsLeft, setAmountQuestionsLeft] = useState<number>(
     props.amountOfQuestions
   );
@@ -39,27 +38,16 @@ const GameComponent: React.FC<gameProps> = (props) => {
     props.timeLeftToAnswerQuestion
   );
   const [showTimeLeft, setShowTimeLeft] = useState<number>(0);
-  const [showCategoryButtons, setShowCategoryButtons] =
-    useState<boolean>(false);
-  const [showNextButton, setShowNextButton] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (props.selectedDifficulty.toLowerCase() === "random") {
-      const tempDifficultyArray = ["easy", "medium", "hard"];
-      const randNumber = Math.floor(Math.random() * 3);
-      fetchTrivias(tempDifficultyArray[randNumber]);
-    } else {
-      fetchTrivias(props.selectedDifficulty.toLowerCase());
-    }
-    setAmountQuestionsLeft(amountQuestionsLeft - 1);
-  }, []);
+  const [showCategoryButtons, setShowCategoryButtons] = useState<boolean>(true);
+  const [nextquestionCountdown, resetQuestionCountdown] = useCountDown(3000);
+  const [showThreeSeconds, setShowThreeSeconds] = useState<boolean>(false);
 
   function fetchTrivias(difficulty: string) {
-    fetch(
+    return fetch(
       ////////////////////////////////////////////////////////////////////////////////////////////////Hittar apiet ingen fråga så ska den försöka igen tills den hittat något
       /////////////////////////////////////////////////////////////////////////////////////////////Är trivia nere så ska användaren bli notifierad att tjänsten är nere.
       "https://the-trivia-api.com/api/questions?categories=" +
-        props.activeCategory +
+        activeCategory +
         "&limit=1" +
         "&region=" +
         props.selectedRegion +
@@ -131,9 +119,6 @@ const GameComponent: React.FC<gameProps> = (props) => {
     setResultText("Correct answer!");
     setCorrectGuesses(rightGuess);
     setCorrectGuessesInARow(rightGuessesInRow);
-    setShowCategoryButtons(true);
-    setShowNextButton(true);
-    props.setActiveCategory("");
   }
 
   function wrongAnswer() {
@@ -141,29 +126,42 @@ const GameComponent: React.FC<gameProps> = (props) => {
     setShowTimeLeft(countdown);
     /////////////////////////////////////////////////////om tiden tar slut ska inga poang delas ut
     setCorrectGuessesInARow(0);
-    setShowCategoryButtons(true);
-    setShowNextButton(true);
-    props.setActiveCategory("");
+  }
+
+  function categoryWasSelected(category: string) {
+    setActiveCategory(category);
+    setTimeout(setShowCategoryButtons, 3000, false);
+    setTimeout(nextQuestion, 3000);
+    setTimeout(resetQuestionCountdown, 10);
+    setShowThreeSeconds(true);
   }
 
   function nextQuestion() {
-    /////////////////////////////////////////////////////needs to start automatically 3 seconds after player chooses new category (after each question)
     setAmountQuestionsLeft(amountQuestionsLeft - 1);
 
     if (amountQuestionsLeft !== 0) {
-      fetchTrivias(props.selectedDifficulty.toLowerCase());
+      if (props.selectedDifficulty.toLowerCase() === "random") {
+        const tempDifficultyArray = ["easy", "medium", "hard"];
+        const randNumber = Math.floor(Math.random() * 3);
+        fetchTrivias(tempDifficultyArray[randNumber]).then(resetCountdown);
+      } else {
+        fetchTrivias(props.selectedDifficulty.toLowerCase()).then(
+          resetCountdown
+        );
+      }
     }
 
-    resetCountdown();
+    setTrivias([]);
     setResultText("");
     setShowTimeLeft(0);
-    setShowCategoryButtons(false);
-    setShowNextButton(false);
+    setShowThreeSeconds(false);
+  }
+
+  function goToNextQuestion() {
+    setShowCategoryButtons(true);
   }
 
   function endResult() {
-    if (showNextButton) setShowNextButton(false);
-
     return (
       <div>
         <p>Your total score is: {currentPoints}</p>
@@ -178,50 +176,52 @@ const GameComponent: React.FC<gameProps> = (props) => {
 
   return (
     <>
-      {trivias.length == 0 ? (
-        "loading..."
+      {showCategoryButtons ? (
+        <>
+          <div id="categoryButtons">
+            <SelectCategory categoryWasSelected={categoryWasSelected} />
+          </div>
+          {showThreeSeconds && (
+            <div>
+              <p>Next question in: {nextquestionCountdown}</p>
+            </div>
+          )}
+        </>
       ) : (
         <>
-          {amountQuestionsLeft == 0 ? (
-            endResult()
+          <div className="activeCategory">
+            <p>{activeCategory}</p>
+          </div>
+          {trivias.length == 0 ? (
+            "loading..."
           ) : (
             <>
-              <div>
-                <p>Points: {currentPoints}</p>
-              </div>
-              <div>
-                <p>
-                  Time remaining to answer:{" "}
-                  {/* Freezes the time visually when an option is selected */}
-                  {showTimeLeft === 0 ? countdown : showTimeLeft}
-                </p>
-              </div>
-              {renderTrivias()}
-              <div id="resultText">
-                <p>{resultText}</p>
-              </div>
-              {showCategoryButtons && (
+              {amountQuestionsLeft == 0 ? (
+                endResult()
+              ) : (
                 <>
-                  <div id="categoryButtons">
-                    <SelectCategory
-                      setActiveCategory={props.setActiveCategory}
-                      activeCategory={props.activeCategory}
-                    />
+                  {renderTrivias()}
+                  <div>
+                    <p>
+                      {/* Freezes the time visually when an option is selected */}
+                      Time left: {showTimeLeft === 0 ? countdown : showTimeLeft}{" "}
+                      seconds
+                    </p>
+                  </div>
+                  <div>
+                    <p>Total Points: {currentPoints}</p>
+                  </div>
+                  <div id="resultText">
+                    <p>{resultText}</p>
+                  </div>
+                  <div id="nextButton">
+                    <button onClick={goToNextQuestion}>Next Question</button>
                   </div>
                 </>
               )}
             </>
           )}
         </>
-      )}
-      {showNextButton && (
-        <div>
-          <input
-            type="button"
-            value="next question"
-            onClick={nextQuestion}
-          ></input>
-        </div>
       )}
     </>
   );

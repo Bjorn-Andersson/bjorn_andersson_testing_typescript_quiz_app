@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import SelectUserName from "./SelectUserName";
-import SelectCategory from "./SelectCategory";
 import SelectDifficulty from "./SelectDifficulty";
 import SelectRegion from "./SelectRegion";
 import GameComponent from "./GameComponent";
@@ -12,7 +11,6 @@ import {
 
 const Home: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
-  const [activeCategory, setActiveCategory] = useState<string>("");
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("");
   const [hideUI, setHideUI] = useState<boolean>(false);
@@ -27,7 +25,6 @@ const Home: React.FC = () => {
     setHideUI(false);
     setSelectedDifficulty("");
     setSelectedRegion("");
-    setActiveCategory("");
     setshowStartButton(true);
   }
 
@@ -35,21 +32,19 @@ const Home: React.FC = () => {
     return (
       <>
         <SelectUserName setUserName={setUserName} userName={userName} />
-        <SelectCategory
-          setActiveCategory={setActiveCategory}
-          activeCategory={activeCategory}
-        />
-        <SelectDifficulty
-          setSelectedDifficulty={setSelectedDifficulty}
-          selectedDifficulty={selectedDifficulty}
-        />
-        <SelectRegion
-          setSelectedRegion={setSelectedRegion}
-          selectedRegion={selectedRegion}
-        />
-        {userName !== "" &&
-          activeCategory !== "" &&
-          selectedDifficulty !== "" &&
+        {userName !== "" && (
+          <>
+            <SelectDifficulty
+              setSelectedDifficulty={setSelectedDifficulty}
+              selectedDifficulty={selectedDifficulty}
+            />
+            <SelectRegion
+              setSelectedRegion={setSelectedRegion}
+              selectedRegion={selectedRegion}
+            />
+          </>
+        )}
+        {selectedDifficulty !== "" &&
           selectedRegion !== "" &&
           showStartButton && (
             <input
@@ -63,17 +58,18 @@ const Home: React.FC = () => {
   }
 
   return (
-    <GameComponent
-      userName={userName}
-      activeCategory={activeCategory}
-      setActiveCategory={setActiveCategory}
-      selectedRegion={selectedRegion}
-      selectedDifficulty={selectedDifficulty}
-      resetGame={resetGame}
-      amountOfQuestions={amountOfQuestions}
-      timeLeftToAnswerQuestion={timeLeftToAnswerQuestion}
-      pointsSystem={pointsSystem}
-    />
+    <>
+      <h1 className="username">{userName}</h1>
+      <GameComponent
+        userName={userName}
+        selectedRegion={selectedRegion}
+        selectedDifficulty={selectedDifficulty}
+        resetGame={resetGame}
+        amountOfQuestions={amountOfQuestions}
+        timeLeftToAnswerQuestion={timeLeftToAnswerQuestion}
+        pointsSystem={pointsSystem}
+      />
+    </>
   );
 };
 
