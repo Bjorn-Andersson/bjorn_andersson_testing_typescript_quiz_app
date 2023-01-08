@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 interface buttonProps {
-  setActiveCategory: (category: string) => void;
-  activeCategory: string;
+  categoryWasSelected: (category: string) => void;
 }
 
 const SelectCategory: React.FC<buttonProps> = (props) => {
@@ -30,7 +29,7 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    props.setActiveCategory(event.currentTarget.value);
+    props.categoryWasSelected(event.currentTarget.value);
   }
 
   function categoryButtons(category: string, index: number) {
@@ -46,13 +45,10 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
   return (
     <div className="container">
       <>
-        <h2>Select a category</h2>
+        <h2>Please select a category for next trivia question</h2>
         {threeCategoriesArray.length > 0
           ? threeCategoriesArray.map(categoryButtons)
           : "loading..."}
-        <div className="activeCategory">
-          <p>Your selected category is: {props.activeCategory}</p>
-        </div>
       </>
     </div>
   );
