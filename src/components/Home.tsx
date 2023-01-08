@@ -17,11 +17,9 @@ const Home: React.FC = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("");
   const [hideUI, setHideUI] = useState<boolean>(false);
   const [showStartButton, setshowStartButton] = useState<boolean>(true);
-  const [showNextButton, setShowNextButton] = useState<boolean>(false);
 
   function startGame() {
     setHideUI(true);
-    setShowNextButton(true);
     setshowStartButton(false);
   }
 
@@ -68,10 +66,9 @@ const Home: React.FC = () => {
     <GameComponent
       userName={userName}
       activeCategory={activeCategory}
+      setActiveCategory={setActiveCategory}
       selectedRegion={selectedRegion}
       selectedDifficulty={selectedDifficulty}
-      showNextButton={showNextButton}
-      setShowNextButton={setShowNextButton}
       resetGame={resetGame}
       amountOfQuestions={amountOfQuestions}
       timeLeftToAnswerQuestion={timeLeftToAnswerQuestion}
