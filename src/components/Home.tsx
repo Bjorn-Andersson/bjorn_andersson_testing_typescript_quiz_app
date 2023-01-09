@@ -76,12 +76,11 @@ const Home: React.FC = () => {
 export default Home;
 
 //TODO:
-//EFTER VARJE FRÅGA FÅR MAN VÄLJA NY KATEGORI!!
-//3 SEKUNDERS NEDRÄKNING FÖRE VARJE NY FRÅGA
-//Hittar apiet ingen fråga så ska den försöka igen tills den hittat något
-
 //Sekvensdiagram
 //Klassdiagram
 
 //BDD test finns som testar en spelomgång
 //Enhetstester finns som täcker kraven och förväntas även att det finns tester som kan hantera uppenbara fel som nollor och null-värden.
+
+//Se till att koden är DRY
+//Lägg till readme fil som berättar om appen och vad man behöver göra för att starta den OCH PRESENTATIONEN(se powerpoint filen)
