@@ -37,10 +37,12 @@ const GameComponent: React.FC<gameProps> = (props) => {
   const [countdown, resetCountdown] = useCountDown(
     props.timeLeftToAnswerQuestion
   );
-  const [showTimeLeft, setShowTimeLeft] = useState<number>(0);
+  const [showCountdown, setShowCountdown] = useState<boolean>(false);
   const [showCategoryButtons, setShowCategoryButtons] = useState<boolean>(true);
   const [nextquestionCountdown, resetQuestionCountdown] = useCountDown(3000);
   const [showThreeSeconds, setShowThreeSeconds] = useState<boolean>(false);
+  const [showNextButton, setShowNextButton] = useState<boolean>(false);
+  const [timerId, setTimerId] = useState<any>(0);
 
   function fetchTrivias(difficulty: string) {
     return fetch(
@@ -76,7 +78,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
                 key={index}
                 value={answers}
                 type="button"
-                onClick={wrongAnswer}
+                onClick={() => wrongAnswer("Wrong answer!")}
               ></input>
             ))}
           </div>
@@ -86,6 +88,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
   }
 
   function correctAnswer() {
+    clearTimeout(timerId);
     let timeRemaining = 0;
     let rightGuess = correctGuesses;
     let rightGuessesInRow = correctGuessesInARow;
@@ -115,25 +118,34 @@ const GameComponent: React.FC<gameProps> = (props) => {
     );
 
     setCurrentPoints(currentPoints + points);
-    setShowTimeLeft(countdown);
+    setShowCountdown(false);
+    setShowNextButton(true);
     setResultText("Correct answer!");
     setCorrectGuesses(rightGuess);
     setCorrectGuessesInARow(rightGuessesInRow);
   }
 
-  function wrongAnswer() {
-    setResultText("Wrong answer!");
-    setShowTimeLeft(countdown);
-    /////////////////////////////////////////////////////om tiden tar slut ska inga poang delas ut
+  function wrongAnswer(resultMessage: string) {
+    clearTimeout(timerId);
+    setResultText(resultMessage);
+    setShowCountdown(false);
+    setShowNextButton(true);
     setCorrectGuessesInARow(0);
   }
 
   function categoryWasSelected(category: string) {
+    createDeadline();
     setActiveCategory(category);
     setTimeout(setShowCategoryButtons, 3000, false);
     setTimeout(nextQuestion, 3000);
     setTimeout(resetQuestionCountdown, 10);
     setShowThreeSeconds(true);
+    setShowNextButton(false);
+  }
+
+  function createDeadline() {
+    const timerID = setTimeout(wrongAnswer, 33000, "You ran out of time!");
+    setTimerId(timerID);
   }
 
   function nextQuestion() {
@@ -153,7 +165,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
 
     setTrivias([]);
     setResultText("");
-    setShowTimeLeft(0);
+    setShowCountdown(true);
     setShowThreeSeconds(false);
   }
 
@@ -201,22 +213,22 @@ const GameComponent: React.FC<gameProps> = (props) => {
               ) : (
                 <>
                   {renderTrivias()}
-                  <div>
-                    <p>
-                      {/* Freezes the time visually when an option is selected */}
-                      Time left: {showTimeLeft === 0 ? countdown : showTimeLeft}{" "}
-                      seconds
-                    </p>
-                  </div>
+                  {showCountdown && (
+                    <div>
+                      <p>Time left: {countdown} seconds</p>
+                    </div>
+                  )}
                   <div>
                     <p>Total Points: {currentPoints}</p>
                   </div>
                   <div id="resultText">
                     <p>{resultText}</p>
                   </div>
-                  <div id="nextButton">
-                    <button onClick={goToNextQuestion}>Next Question</button>
-                  </div>
+                  {showNextButton && (
+                    <div id="nextButton">
+                      <button onClick={goToNextQuestion}>Next Question</button>
+                    </div>
+                  )}
                 </>
               )}
             </>
