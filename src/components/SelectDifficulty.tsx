@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface buttonProps {
-  setSelectedDifficulty: (difficulty: string) => void;
-  selectedDifficulty: string;
+  difficultyWasSelected: (difficulty: string) => void;
 }
 
 const SelectDifficulty: React.FC<buttonProps> = (props) => {
   const difficulties: string[] = ["Easy", "Medium", "Hard", "Random"];
+  const [difficulty, setDifficulty] = useState<string>("");
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    props.setSelectedDifficulty(event.currentTarget.value);
+    props.difficultyWasSelected(event.currentTarget.value);
+    setDifficulty(event.currentTarget.value);
   }
 
   function difficultyButtons(difficulty: string, index: number) {
     return (
       <div className="container" key={index}>
         <button
+          data-testid={difficulty}
           className="difficultyButton"
           value={difficulty}
           onClick={handleClick}
@@ -31,7 +33,12 @@ const SelectDifficulty: React.FC<buttonProps> = (props) => {
     <>
       <h3>Please select difficulty</h3>
       {difficulties.map(difficultyButtons)}
-      <p>Your selected difficulty is: {props.selectedDifficulty}</p>
+      {difficulty !== "" && (
+        <p>
+          Your selected difficulty is:{" "}
+          <span data-testid="difficulty">{difficulty}</span>
+        </p>
+      )}
     </>
   );
 };

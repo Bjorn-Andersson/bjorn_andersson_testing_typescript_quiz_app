@@ -39,7 +39,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
     props.timeLeftToAnswerQuestion
   );
   const [nextquestionCountdown, resetQuestionCountdown] = useCountDown(3000);
-  const [timerId, setTimerId] = useState<any>(0);
+  const [timerId, setTimerId] = useState<number>(0);
   const [showCountdown, setShowCountdown] = useState<boolean>(false);
   const [showCategoryButtons, setShowCategoryButtons] = useState<boolean>(true);
   const [showThreeSeconds, setShowThreeSeconds] = useState<boolean>(false);
@@ -145,6 +145,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
 
   function categoryWasSelected(category: string) {
     createDeadline();
+
     setTimeout(setShowCategoryButtons, 3000, false);
     setTimeout(nextQuestion, 3000);
     setTimeout(resetQuestionCountdown, 10);
@@ -155,7 +156,11 @@ const GameComponent: React.FC<gameProps> = (props) => {
   }
 
   function createDeadline() {
-    const timerID = setTimeout(wrongAnswer, 33000, "You ran out of time!");
+    const timerID = window.setTimeout(
+      wrongAnswer,
+      33000,
+      "You ran out of time!"
+    );
     setTimerId(timerID);
   }
 

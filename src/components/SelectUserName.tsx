@@ -1,21 +1,32 @@
 import React, { useState } from "react";
 
 interface buttonProps {
-  setUserName: (username: string) => void;
+  usernameWasSet: (username: string) => void;
   userName: string;
 }
 
 const SelectUserName: React.FC<buttonProps> = (props) => {
-  const [tempUserName, setTempUserName] = useState<string>("");
+  const [username, setUsername] = useState<string>(props.userName);
+  const [showWelcome, setShowWelcome] = useState<boolean>(false);
 
-  function handleClick(event: React.MouseEvent<HTMLInputElement>) {
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    props.setUserName(tempUserName);
-    setTempUserName("");
+    props.usernameWasSet(username);
+    setShowWelcome(true);
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setTempUserName(event.target.value);
+    setUsername(event.target.value);
+  }
+
+  if (showWelcome == true) {
+    return (
+      <>
+        <h1>
+          <span data-testid="username">Welcome {username}!</span>
+        </h1>
+      </>
+    );
   }
 
   return (
@@ -27,16 +38,17 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
           className="textInput"
           type="text"
           placeholder="Enter your username"
-          value={tempUserName}
+          value={username}
         />
-        <input
+        <button
+          data-testid="submitButton"
           className="submitButton"
           onClick={handleClick}
           type="button"
-          value="Submit"
-        />
+        >
+          Submit
+        </button>
       </form>
-      {props.userName !== "" && <h1>Welcome {props.userName}!</h1>}
     </>
   );
 };
