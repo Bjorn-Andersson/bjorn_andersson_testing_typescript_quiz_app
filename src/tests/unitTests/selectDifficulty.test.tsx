@@ -2,8 +2,7 @@ import { act, render, screen } from "@testing-library/react";
 import React from "react";
 import SelectDifficulty from "../../components/SelectDifficulty";
 
-describe("selectDifficulty", () => {
-  ////////////////////////////////////////////////////förväntas även att det finns tester som kan hantera uppenbara fel som nollor och null-värden.
+describe("testing selectDifficulty", () => {
   test("correctly selects difficulty", () => {
     //arrange
     const exampleDifficulty: string = "Easy";

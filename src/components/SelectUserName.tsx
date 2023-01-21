@@ -8,15 +8,22 @@ interface buttonProps {
 const SelectUserName: React.FC<buttonProps> = (props) => {
   const [username, setUsername] = useState<string>(props.userName);
   const [showWelcome, setShowWelcome] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(true);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
+
     props.usernameWasSet(username);
     setShowWelcome(true);
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value);
+    if (event.target.value.trim() == "") {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
   }
 
   if (showWelcome == true) {
@@ -43,6 +50,7 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
         <button
           data-testid="submitButton"
           className="submitButton"
+          disabled={isActive}
           onClick={handleClick}
           type="button"
         >

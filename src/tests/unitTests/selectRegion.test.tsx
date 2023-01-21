@@ -2,8 +2,7 @@ import { act, render, screen } from "@testing-library/react";
 import React from "react";
 import SelectRegion from "../../components/SelectRegion";
 
-describe("selectRegion", () => {
-  ////////////////////////////////////////////////////förväntas även att det finns tester som kan hantera uppenbara fel som nollor och null-värden.
+describe("testing selectRegion", () => {
   test("correctly selects region", () => {
     //arrange
     const exampleRegion: string = "GB";

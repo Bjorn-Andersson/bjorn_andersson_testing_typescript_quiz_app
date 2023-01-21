@@ -2,8 +2,7 @@ import { act, screen, render, waitFor } from "@testing-library/react";
 import SelectCategory from "../../components/SelectCategory";
 import React from "react";
 
-describe("fetchCategories", () => {
-  ////////////////////////////////////////////////////förväntas även att det finns tester som kan hantera uppenbara fel som nollor och null-värden.
+describe("testing fetchCategories", () => {
   test("correctly selects category", async () => {
     //arrange
     let button: HTMLButtonElement;

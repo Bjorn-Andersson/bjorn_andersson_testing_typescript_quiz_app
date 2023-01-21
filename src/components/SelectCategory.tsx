@@ -55,7 +55,7 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
             </div>
           ))
         ) : (
-          <span data-testid="loadingText">"loading..."</span>
+          <span data-testid="loadingText">loading...</span>
         )}
       </>
       {category !== "" && (
