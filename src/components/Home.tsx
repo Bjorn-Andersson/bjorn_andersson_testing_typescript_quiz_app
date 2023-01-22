@@ -16,6 +16,18 @@ const Home: React.FC = () => {
   const [hideUI, setHideUI] = useState<boolean>(false);
   const [showStartButton, setshowStartButton] = useState<boolean>(true);
 
+  function usernameWasSet(username: string) {
+    setUserName(username);
+  }
+
+  function difficultyWasSelected(difficulty: string) {
+    setSelectedDifficulty(difficulty);
+  }
+
+  function regionWasSelected(region: string) {
+    setSelectedRegion(region);
+  }
+
   function startGame() {
     setHideUI(true);
     setshowStartButton(false);
@@ -31,17 +43,11 @@ const Home: React.FC = () => {
   if (!hideUI) {
     return (
       <>
-        <SelectUserName setUserName={setUserName} userName={userName} />
+        <SelectUserName usernameWasSet={usernameWasSet} userName={userName} />
         {userName !== "" && (
           <>
-            <SelectDifficulty
-              setSelectedDifficulty={setSelectedDifficulty}
-              selectedDifficulty={selectedDifficulty}
-            />
-            <SelectRegion
-              setSelectedRegion={setSelectedRegion}
-              selectedRegion={selectedRegion}
-            />
+            <SelectDifficulty difficultyWasSelected={difficultyWasSelected} />
+            <SelectRegion regionWasSelected={regionWasSelected} />
           </>
         )}
         {selectedDifficulty !== "" &&
@@ -76,12 +82,11 @@ const Home: React.FC = () => {
 export default Home;
 
 //TODO:
-//EFTER VARJE FRÅGA FÅR MAN VÄLJA NY KATEGORI!!
-//3 SEKUNDERS NEDRÄKNING FÖRE VARJE NY FRÅGA
-//Hittar apiet ingen fråga så ska den försöka igen tills den hittat något
 
-//Sekvensdiagram
-//Klassdiagram
+////////////////////////////BUG : bara 8 frågor atm
 
 //BDD test finns som testar en spelomgång
 //Enhetstester finns som täcker kraven och förväntas även att det finns tester som kan hantera uppenbara fel som nollor och null-värden.
+
+//Se till att koden är DRY
+//Lägg till readme fil som berättar om appen och vad man behöver göra för att starta den OCH PRESENTATIONEN(se powerpoint filen)
