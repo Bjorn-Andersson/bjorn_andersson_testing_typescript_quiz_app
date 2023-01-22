@@ -4,7 +4,6 @@ import { pointsSystem as calculatePoints } from "../../config";
 const feature = loadFeature("./src/tests/features/game.feature");
 
 defineFeature(feature, (test) => {
-  let difficulty: string;
   let difficultyPoints: number;
   let correctAnswers: number;
   let correctAnswersInARow: number;
@@ -19,7 +18,6 @@ defineFeature(feature, (test) => {
     given(
       /^difficulty: medium and difficultyPoints: (\d+) and correctAnswers: (\d+) and correctAnswersInARow: (\d+) and timeRemaining: (\d+)$/,
       (arg0, arg1, arg2, arg3) => {
-        difficulty = "medium";
         difficultyPoints = parseInt(arg0);
         correctAnswers = parseInt(arg1);
         correctAnswersInARow = parseInt(arg2);

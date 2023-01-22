@@ -43,9 +43,9 @@ const GameComponent: React.FC<gameProps> = (props) => {
   const [showCountdown, setShowCountdown] = useState<boolean>(false);
   const [showCategoryButtons, setShowCategoryButtons] = useState<boolean>(true);
   const [showThreeSeconds, setShowThreeSeconds] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-  function fetchTrivias(difficulty: string) {
+  function fetchTrivias(difficulty: string): Promise<void> {
     return fetch(
       "https://the-trivia-api.com/api/questions?categories=" +
         activeCategory +
@@ -59,14 +59,15 @@ const GameComponent: React.FC<gameProps> = (props) => {
       .then((data) => {
         setTrivias(data);
       })
-      .catch((error) => {
-        if (error.status == 503) {
+      .catch((error): Promise<void> => {
+        if (error.status === 503) {
           setErrorMessage("The service is currently unavailable");
-        } else if (error.status == 204 || 404) {
+        } else if (error.status === 204 || error.status === 404) {
           const tempDifficultyArray = ["easy", "medium", "hard"];
           const randNumber = Math.floor(Math.random() * 3);
-          fetchTrivias(tempDifficultyArray[randNumber]);
+          return fetchTrivias(tempDifficultyArray[randNumber]);
         }
+        return Promise.reject();
       });
   }
 
@@ -79,7 +80,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
             <input
               value={trivia.correctAnswer}
               type="button"
-              disabled={isActive}
+              disabled={isDisabled}
               onClick={correctAnswer}
             ></input>
             {trivia.incorrectAnswers.map((answers: string, index: number) => (
@@ -87,7 +88,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
                 key={index}
                 value={answers}
                 type="button"
-                disabled={isActive}
+                disabled={isDisabled}
                 onClick={() => wrongAnswer("Wrong answer!")}
               ></input>
             ))}
@@ -126,20 +127,22 @@ const GameComponent: React.FC<gameProps> = (props) => {
       difficultyPointsAwarded
     );
 
+    setAmountQuestionsLeft(amountQuestionsLeft - 1);
     setCurrentPoints(currentPoints + points);
     setCorrectGuesses(rightGuess);
     setCorrectGuessesInARow(rightGuessesInRow);
     setShowCountdown(false);
-    setIsActive(true);
+    setIsDisabled(true);
     setResultText("Correct answer!");
   }
 
   function wrongAnswer(resultMessage: string) {
     clearTimeout(timerId);
 
+    setAmountQuestionsLeft(amountQuestionsLeft - 1);
     setResultText(resultMessage);
     setShowCountdown(false);
-    setIsActive(true);
+    setIsDisabled(true);
     setCorrectGuessesInARow(0);
   }
 
@@ -152,7 +155,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
 
     setActiveCategory(category);
     setShowThreeSeconds(true);
-    setIsActive(false);
+    setIsDisabled(false);
   }
 
   function createDeadline() {
@@ -165,8 +168,6 @@ const GameComponent: React.FC<gameProps> = (props) => {
   }
 
   function nextQuestion() {
-    setAmountQuestionsLeft(amountQuestionsLeft - 1);
-
     if (amountQuestionsLeft !== 0) {
       if (props.selectedDifficulty.toLowerCase() === "random") {
         const tempDifficultyArray = ["easy", "medium", "hard"];
@@ -244,7 +245,7 @@ const GameComponent: React.FC<gameProps> = (props) => {
                       <div id="resultText">
                         <p>{resultText}</p>
                       </div>
-                      {isActive && (
+                      {isDisabled && (
                         <div id="nextButton">
                           <button onClick={goToNextQuestion}>
                             Next Question

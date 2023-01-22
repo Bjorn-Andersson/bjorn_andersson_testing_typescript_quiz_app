@@ -5,6 +5,7 @@ interface buttonProps {
 }
 
 const SelectCategory: React.FC<buttonProps> = (props) => {
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
   const [threeCategoriesArray, setThreeCategoriesArray] = useState<string[]>(
     []
@@ -36,6 +37,7 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
     event.preventDefault();
     props.categoryWasSelected(event.currentTarget.value);
     setCategory(event.currentTarget.value);
+    setIsDisabled(true);
   }
 
   return (
@@ -46,6 +48,7 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
           threeCategoriesArray.map((category, index) => (
             <div className="buttons" key={index}>
               <button
+                disabled={isDisabled}
                 data-testid={index}
                 onClick={handleClick}
                 value={category}
