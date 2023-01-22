@@ -8,9 +8,9 @@ interface buttonProps {
 const SelectUserName: React.FC<buttonProps> = (props) => {
   const [username, setUsername] = useState<string>(props.userName);
   const [showWelcome, setShowWelcome] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState<boolean>(true);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     props.usernameWasSet(username);
@@ -20,9 +20,9 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value);
     if (event.target.value.trim() == "") {
-      setIsActive(true);
+      setIsDisabled(true);
     } else {
-      setIsActive(false);
+      setIsDisabled(false);
     }
   }
 
@@ -39,7 +39,7 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
   return (
     <>
       <h2>Enter your username</h2>
-      <form className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <input
           onChange={handleChange}
           className="textInput"
@@ -50,9 +50,8 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
         <button
           data-testid="submitButton"
           className="submitButton"
-          disabled={isActive}
-          onClick={handleClick}
-          type="button"
+          disabled={isDisabled}
+          type="submit"
         >
           Submit
         </button>
