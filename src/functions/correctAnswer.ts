@@ -34,5 +34,5 @@ export default function correctAnswer(
     roundCountdown,
     difficultyPointsAwarded
   );
-  correctAnswerWasPicked();
+  correctAnswerWasPicked(points, rightGuess, rightGuessesInRow);
 }

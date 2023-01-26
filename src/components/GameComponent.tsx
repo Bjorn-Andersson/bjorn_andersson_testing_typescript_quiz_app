@@ -48,18 +48,21 @@ const GameComponent: React.FC<gameProps> = (props) => {
     createDeadline();
 
     setTimeout(setShowCategoryButtons, 3000, false);
-    setTimeout(
-      nextQuestion,
-      3000,
-      props.amountOfQuestions,
-      props.selectedDifficulty,
-      activeCategory,
-      props.selectedRegion,
-      setTrivias,
-      setErrorMessage,
-      resetRoundCountdown,
-      nextQuestionWasTriggered
-    );
+    setTimeout(() => {
+      try {
+        nextQuestion(
+          props.amountOfQuestions,
+          props.selectedDifficulty,
+          props.selectedRegion,
+          activeCategory,
+          setTrivias,
+          resetRoundCountdown,
+          nextQuestionWasTriggered
+        );
+      } catch (err: any) {
+        setErrorMessage(err);
+      }
+    }, 3000);
     setTimeout(resetQuestionCountdown, 10);
     setActiveCategory(category);
     setShowThreeSeconds(true);

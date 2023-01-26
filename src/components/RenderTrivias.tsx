@@ -4,6 +4,18 @@ import triviaProps from "../interfaces/triviaProps";
 import renderTriviaProps from "../interfaces/renderTriviaProps";
 
 const renderTrivias: React.FC<renderTriviaProps> = (props) => {
+  function callCorrectAnswer() {
+    correctAnswer(
+      props.timerId,
+      props.correctGuesses,
+      props.correctGuessesInARow,
+      props.trivias,
+      props.pointsSystem,
+      props.roundCountdown,
+      props.correctAnswerWasPicked
+    );
+  }
+
   return (
     <>
       {props.trivias.map((trivia: triviaProps, index: number) => (
@@ -13,15 +25,7 @@ const renderTrivias: React.FC<renderTriviaProps> = (props) => {
             value={trivia.correctAnswer}
             type="button"
             disabled={props.isDisabled}
-            onClick={correctAnswer(
-              props.timerId,
-              props.correctGuesses,
-              props.correctGuessesInARow,
-              props.trivias,
-              props.pointsSystem,
-              props.roundCountdown,
-              props.correctAnswerWasPicked
-            )}
+            onClick={callCorrectAnswer}
           ></input>
           {trivia.incorrectAnswers.map((answers: string, index: number) => (
             <input
