@@ -24,11 +24,10 @@ const renderTrivias: React.FC<renderTriviaProps> = (props) => {
       setAnswer(trivia.correctAnswer);
     });
     shuffle(valueArray);
-    console.log(valueArray);
     setArray(valueArray);
   }
 
-  function shuffle(array: any) {
+  function shuffle(array: string[]) {
     let currentIndex = array.length;
     let randomIndex;
 

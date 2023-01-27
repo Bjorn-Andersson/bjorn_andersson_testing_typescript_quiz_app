@@ -1,11 +1,22 @@
+import triviaProps from "../interfaces/triviaProps";
+
 export default function correctAnswer(
   timerId: number,
   correctGuesses: number,
   correctGuessesInARow: number,
-  trivias: any,
-  pointsSystem: any,
-  roundCountdown: any,
-  correctAnswerWasPicked: any
+  trivias: triviaProps[],
+  pointsSystem: (
+    correctGuesses: number,
+    correctGuessesInARow: number,
+    timeLeftToAnswerQuestion: number,
+    difficultyPoints: number
+  ) => number,
+  roundCountdown: number,
+  correctAnswerWasPicked: (
+    points: number,
+    rightGuess: number,
+    rightGuessesInRow: number
+  ) => void
 ) {
   clearTimeout(timerId);
 

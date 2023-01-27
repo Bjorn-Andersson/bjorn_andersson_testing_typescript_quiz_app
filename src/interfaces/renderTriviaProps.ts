@@ -7,8 +7,13 @@ export default interface renderTriviaProps {
   timerId: number;
   correctGuesses: number;
   correctGuessesInARow: number;
-  pointsSystem: any;
-  roundCountdown: any;
+  pointsSystem: (
+    correctGuesses: number,
+    correctGuessesInARow: number,
+    timeLeftToAnswerQuestion: number,
+    difficultyPoints: number
+  ) => number;
+  roundCountdown: number;
   correctAnswerWasPicked: (
     points: number,
     rightGuess: number,
