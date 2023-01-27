@@ -42,7 +42,7 @@ const Home: React.FC = () => {
 
   if (!hideUI) {
     return (
-      <>
+      <div className="container">
         <SelectUserName usernameWasSet={usernameWasSet} userName={userName} />
         {userName !== "" && (
           <>
@@ -56,15 +56,16 @@ const Home: React.FC = () => {
             <input
               type="button"
               value="start"
+              className="startButton"
               onClick={() => startGame()}
             ></input>
           )}
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="container">
       <h1 className="username">{userName}</h1>
       <GameComponent
         userName={userName}
@@ -75,7 +76,7 @@ const Home: React.FC = () => {
         timeLeftToAnswerQuestion={timeLeftToAnswerQuestion}
         pointsSystem={pointsSystem}
       />
-    </>
+    </div>
   );
 };
 
@@ -83,10 +84,4 @@ export default Home;
 
 //TODO:
 
-////////////////////////////BUG : bara 8 frågor atm
-
-//BDD test finns som testar en spelomgång
-//Enhetstester finns som täcker kraven och förväntas även att det finns tester som kan hantera uppenbara fel som nollor och null-värden.
-
-//Se till att koden är DRY
 //Lägg till readme fil som berättar om appen och vad man behöver göra för att starta den OCH PRESENTATIONEN(se powerpoint filen)

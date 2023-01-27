@@ -1,0 +1,70 @@
+html {
+  background-color: beige;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.difficultyContainer,
+.regionContainer,
+.categoryContainer {
+  display: flex;
+}
+.difficulty,
+.region,
+.category {
+  font-size: 24px;
+  margin-left: 5px;
+}
+.difficultyText,
+.regionText,
+.categoryText {
+  font-size: 18px;
+}
+.button {
+  height: 50px;
+  width: 100px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: white;
+}
+.button:hover {
+  color: white;
+  background-color: black !important;
+}
+.button:focus {
+  background-color: gainsboro;
+}
+.startButton {
+  height: 50px;
+  width: 100px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: darkcyan;
+  color: yellow;
+}
+.startButton:focus,
+.startButton:hover {
+  color: gold !important;
+  background-color: rgb(2, 107, 107);
+}
+.categoryButtons {
+  width: 130px !important;
+}
+.userNameButton {
+  background-color: white;
+  border-radius: 4px;
+  margin-left: 5px;
+  height: 26px;
+}
+.textInput {
+  height: 20px;
+  border-radius: 2px;
+}
+.username {
+  font-size: 50px;
+}

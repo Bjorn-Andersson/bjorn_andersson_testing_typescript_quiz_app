@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styling/selects.css";
 
 interface buttonProps {
   regionWasSelected: (region: string) => void;
@@ -16,10 +17,10 @@ const SelectRegion: React.FC<buttonProps> = (props) => {
 
   function regionButtons(region: string, index: number) {
     return (
-      <div className="container" key={index}>
+      <div key={index}>
         <button
           data-testid={region}
-          className="difficultyButton"
+          className="button"
           value={region}
           onClick={handleClick}
         >
@@ -32,10 +33,13 @@ const SelectRegion: React.FC<buttonProps> = (props) => {
   return (
     <>
       <h3>Please select region</h3>
-      {regions.map(regionButtons)}
+      <div className="regionContainer">{regions.map(regionButtons)}</div>
       {region !== "" && (
-        <p>
-          Your selected region is: <span data-testid="region">{region}</span>
+        <p className="regionText">
+          Your selected region is:{" "}
+          <span className="region" data-testid="region">
+            <b>{region}</b>
+          </span>
         </p>
       )}
     </>

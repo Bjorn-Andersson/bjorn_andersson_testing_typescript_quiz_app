@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../styling/selects.css";
 
 interface buttonProps {
   categoryWasSelected: (category: string) => void;
@@ -43,28 +44,34 @@ const SelectCategory: React.FC<buttonProps> = (props) => {
   return (
     <div className="container">
       <>
-        <h2>Please select a category for next trivia question</h2>
+        <h2 className="categoryTitle">
+          Please select a category for next trivia question
+        </h2>
         {threeCategoriesArray.length > 0 ? (
-          threeCategoriesArray.map((category, index) => (
-            <div className="buttons" key={index}>
+          <div className="categoryContainer">
+            {threeCategoriesArray.map((category, index) => (
               <button
+                key={index}
                 disabled={isDisabled}
                 data-testid={index}
                 onClick={handleClick}
                 value={category}
+                className="button categoryButtons"
               >
                 {category}
               </button>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
           <span data-testid="loadingText">loading...</span>
         )}
       </>
       {category !== "" && (
-        <p>
+        <p className="categoryText">
           Your chosen category is:{" "}
-          <span data-testid="category">{category}</span>
+          <span className="category" data-testid="category">
+            {category}
+          </span>
         </p>
       )}
     </div>

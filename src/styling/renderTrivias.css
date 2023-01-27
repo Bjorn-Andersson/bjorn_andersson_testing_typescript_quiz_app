@@ -1,0 +1,26 @@
+.button {
+  height: 90px;
+  width: 200px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: white;
+}
+.button:hover {
+  color: white;
+  background-color: black !important;
+}
+.button:focus {
+  background-color: gainsboro;
+}
+.optionsContainer {
+  display: flex;
+  margin-top: 40px;
+}
+.question {
+  font-size: 30px;
+  width: 60%;
+  text-align: center;
+}

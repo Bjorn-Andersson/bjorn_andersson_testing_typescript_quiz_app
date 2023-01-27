@@ -5,6 +5,7 @@ import nextQuestion from "../functions/nextQuestion";
 import RenderTrivias from "./RenderTrivias";
 import triviaProps from "../interfaces/triviaProps";
 import gameProps from "../interfaces/gameProps";
+import "../styling/gameComponent.css";
 
 const GameComponent: React.FC<gameProps> = (props) => {
   const [trivias, setTrivias] = useState<Array<triviaProps>>([]);
@@ -109,7 +110,9 @@ const GameComponent: React.FC<gameProps> = (props) => {
               </div>
               {showThreeSeconds && (
                 <div>
-                  <p>Next question in: {nextquestionCountdown}</p>
+                  <p className="countdown">
+                    Next question in: {nextquestionCountdown}
+                  </p>
                 </div>
               )}
             </>
@@ -123,10 +126,13 @@ const GameComponent: React.FC<gameProps> = (props) => {
               ) : (
                 <>
                   {amountQuestionsLeft == 0 ? (
-                    <div>
-                      <p>Your total score is: {currentPoints}</p>
+                    <div className="container">
+                      <p className="endResult">
+                        Your total score is: {currentPoints}
+                      </p>
                       <input
                         type="button"
+                        className="nextButton"
                         value="Play Again"
                         onClick={props.resetGame}
                       ></input>
@@ -146,18 +152,23 @@ const GameComponent: React.FC<gameProps> = (props) => {
                       />
                       {showCountdown && (
                         <div>
-                          <p>Time left: {roundCountdown} seconds</p>
+                          <p className="timeLeft">
+                            Time left: {roundCountdown} seconds
+                          </p>
                         </div>
                       )}
                       <div>
-                        <p>Total Points: {currentPoints}</p>
+                        <p className="points">Total Points: {currentPoints}</p>
                       </div>
-                      <div id="resultText">
-                        <p>{resultText}</p>
+                      <div>
+                        <p className="resultText">{resultText}</p>
                       </div>
                       {isDisabled && (
-                        <div id="nextButton">
-                          <button onClick={goToNextQuestion}>
+                        <div>
+                          <button
+                            className="nextButton"
+                            onClick={goToNextQuestion}
+                          >
                             Next Question
                           </button>
                         </div>
