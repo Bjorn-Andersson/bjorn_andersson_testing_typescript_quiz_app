@@ -1,41 +1,77 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import correctAnswer from "../functions/correctAnswer";
 import triviaProps from "../interfaces/triviaProps";
 import renderTriviaProps from "../interfaces/renderTriviaProps";
 
 const renderTrivias: React.FC<renderTriviaProps> = (props) => {
-  function callCorrectAnswer() {
-    correctAnswer(
-      props.timerId,
-      props.correctGuesses,
-      props.correctGuessesInARow,
-      props.trivias,
-      props.pointsSystem,
-      props.roundCountdown,
-      props.correctAnswerWasPicked
-    );
+  const [array, setArray] = useState<string[]>([]);
+  const [question, setQuestion] = useState<string>("");
+  const [answer, setAnswer] = useState<string>("");
+
+  useEffect(() => {
+    randomizeInputs();
+  }, []);
+
+  function randomizeInputs() {
+    const valueArray: string[] = [];
+
+    props.trivias.map((trivia: triviaProps) => {
+      trivia.incorrectAnswers.map((answer: string) => {
+        valueArray.push(answer);
+      });
+      valueArray.push(trivia.correctAnswer);
+      setQuestion(trivia.question);
+      setAnswer(trivia.correctAnswer);
+    });
+    shuffle(valueArray);
+    console.log(valueArray);
+    setArray(valueArray);
+  }
+
+  function shuffle(array: any) {
+    let currentIndex = array.length;
+    let randomIndex;
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+    return array;
+  }
+
+  function checkAnswer(event: React.MouseEvent<HTMLButtonElement>) {
+    if (event.currentTarget.value === answer) {
+      correctAnswer(
+        props.timerId,
+        props.correctGuesses,
+        props.correctGuessesInARow,
+        props.trivias,
+        props.pointsSystem,
+        props.roundCountdown,
+        props.correctAnswerWasPicked
+      );
+    } else {
+      props.wrongAnswer("Wrong answer! Correct answer was: " + answer);
+    }
   }
 
   return (
     <>
-      {props.trivias.map((trivia: triviaProps, index: number) => (
+      <div>{question}</div>
+      {array.map((answer: string, index: number) => (
         <div key={index}>
-          <div>{trivia.question}</div>
-          <input
-            value={trivia.correctAnswer}
-            type="button"
+          <button
+            value={answer}
             disabled={props.isDisabled}
-            onClick={callCorrectAnswer}
-          ></input>
-          {trivia.incorrectAnswers.map((answers: string, index: number) => (
-            <input
-              key={index}
-              value={answers}
-              type="button"
-              disabled={props.isDisabled}
-              onClick={() => props.wrongAnswer("Wrong answer!")}
-            ></input>
-          ))}
+            onClick={checkAnswer}
+          >
+            {answer}
+          </button>
         </div>
       ))}
     </>
