@@ -1,28 +1,10 @@
 import React, { useState } from "react";
 import useCountDown from "../hooks/useCountDown";
 import SelectCategory from "./SelectCategory";
-
-interface gameProps {
-  userName: string;
-  selectedDifficulty: string;
-  selectedRegion: string;
-  resetGame: () => void;
-  amountOfQuestions: number;
-  timeLeftToAnswerQuestion: number;
-  pointsSystem: (
-    correctGuesses: number,
-    correctGuessesInARow: number,
-    timeLeftToAnswerQuestion: number,
-    difficultyPoints: number
-  ) => number;
-}
-
-interface triviaProps {
-  question: string;
-  correctAnswer: string;
-  incorrectAnswers: string[];
-  difficulty: string;
-}
+import nextQuestion from "../functions/nextQuestion";
+import RenderTrivias from "./RenderTrivias";
+import triviaProps from "../interfaces/triviaProps";
+import gameProps from "../interfaces/gameProps";
 
 const GameComponent: React.FC<gameProps> = (props) => {
   const [trivias, setTrivias] = useState<Array<triviaProps>>([]);
@@ -45,97 +27,6 @@ const GameComponent: React.FC<gameProps> = (props) => {
   const [showThreeSeconds, setShowThreeSeconds] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-  function fetchTrivias(difficulty: string): Promise<void> {
-    return fetch(
-      "https://the-trivia-api.com/api/questions?categories=" +
-        activeCategory +
-        "&limit=1" +
-        "&region=" +
-        props.selectedRegion +
-        "&difficulty=" +
-        difficulty
-    )
-      .then((response): Promise<Array<triviaProps>> => response.json())
-      .then((data) => {
-        setTrivias(data);
-      })
-      .catch((error): Promise<void> => {
-        if (error.status === 503) {
-          setErrorMessage("The service is currently unavailable");
-        } else if (error.status === 204 || error.status === 404) {
-          const tempDifficultyArray = ["easy", "medium", "hard"];
-          const randNumber = Math.floor(Math.random() * 3);
-          return fetchTrivias(tempDifficultyArray[randNumber]);
-        }
-        return Promise.reject();
-      });
-  }
-
-  function renderTrivias() {
-    return (
-      <>
-        {trivias.map((trivia: triviaProps, index) => (
-          <div key={index}>
-            <div>{trivia.question}</div>
-            <input
-              value={trivia.correctAnswer}
-              type="button"
-              disabled={isDisabled}
-              onClick={correctAnswer}
-            ></input>
-            {trivia.incorrectAnswers.map((answers: string, index: number) => (
-              <input
-                key={index}
-                value={answers}
-                type="button"
-                disabled={isDisabled}
-                onClick={() => wrongAnswer("Wrong answer!")}
-              ></input>
-            ))}
-          </div>
-        ))}
-      </>
-    );
-  }
-
-  function correctAnswer() {
-    clearTimeout(timerId);
-
-    let rightGuess = correctGuesses;
-    let rightGuessesInRow = correctGuessesInARow;
-    let difficultyPointsAwarded = 0;
-    let points = 0;
-
-    switch (trivias[0].difficulty) {
-      case "easy":
-        difficultyPointsAwarded = 1;
-        break;
-      case "medium":
-        difficultyPointsAwarded = 3;
-        break;
-      case "hard":
-        difficultyPointsAwarded = 5;
-        break;
-    }
-
-    rightGuess++;
-    rightGuessesInRow++;
-    points = props.pointsSystem(
-      rightGuess,
-      rightGuessesInRow,
-      roundCountdown,
-      difficultyPointsAwarded
-    );
-
-    setAmountQuestionsLeft(amountQuestionsLeft - 1);
-    setCurrentPoints(currentPoints + points);
-    setCorrectGuesses(rightGuess);
-    setCorrectGuessesInARow(rightGuessesInRow);
-    setShowCountdown(false);
-    setIsDisabled(true);
-    setResultText("Correct answer!");
-  }
-
   function wrongAnswer(resultMessage: string) {
     clearTimeout(timerId);
 
@@ -146,16 +37,50 @@ const GameComponent: React.FC<gameProps> = (props) => {
     setCorrectGuessesInARow(0);
   }
 
+  function nextQuestionWasTriggered() {
+    setTrivias([]);
+    setResultText("");
+    setShowCountdown(true);
+    setShowThreeSeconds(false);
+  }
+
   function categoryWasSelected(category: string) {
     createDeadline();
 
     setTimeout(setShowCategoryButtons, 3000, false);
-    setTimeout(nextQuestion, 3000);
+    setTimeout(() => {
+      try {
+        nextQuestion(
+          props.amountOfQuestions,
+          props.selectedDifficulty,
+          props.selectedRegion,
+          activeCategory,
+          setTrivias,
+          resetRoundCountdown,
+          nextQuestionWasTriggered
+        );
+      } catch (err: any) {
+        setErrorMessage(err);
+      }
+    }, 3000);
     setTimeout(resetQuestionCountdown, 10);
-
     setActiveCategory(category);
     setShowThreeSeconds(true);
     setIsDisabled(false);
+  }
+
+  function correctAnswerWasPicked(
+    points: number,
+    rightGuess: number,
+    rightGuessesInRow: number
+  ) {
+    setAmountQuestionsLeft(amountQuestionsLeft - 1);
+    setCurrentPoints(currentPoints + points);
+    setCorrectGuesses(rightGuess);
+    setCorrectGuessesInARow(rightGuessesInRow);
+    setShowCountdown(false);
+    setIsDisabled(true);
+    setResultText("Correct answer!");
   }
 
   function createDeadline() {
@@ -167,40 +92,8 @@ const GameComponent: React.FC<gameProps> = (props) => {
     setTimerId(timerID);
   }
 
-  function nextQuestion() {
-    if (amountQuestionsLeft !== 0) {
-      if (props.selectedDifficulty.toLowerCase() === "random") {
-        const tempDifficultyArray = ["easy", "medium", "hard"];
-        const randNumber = Math.floor(Math.random() * 3);
-        fetchTrivias(tempDifficultyArray[randNumber]).then(resetRoundCountdown);
-      } else {
-        fetchTrivias(props.selectedDifficulty.toLowerCase()).then(
-          resetRoundCountdown
-        );
-      }
-    }
-
-    setTrivias([]);
-    setResultText("");
-    setShowCountdown(true);
-    setShowThreeSeconds(false);
-  }
-
   function goToNextQuestion() {
     setShowCategoryButtons(true);
-  }
-
-  function endResult() {
-    return (
-      <div>
-        <p>Your total score is: {currentPoints}</p>
-        <input
-          type="button"
-          value="Play Again"
-          onClick={props.resetGame}
-        ></input>
-      </div>
-    );
   }
 
   return (
@@ -230,10 +123,27 @@ const GameComponent: React.FC<gameProps> = (props) => {
               ) : (
                 <>
                   {amountQuestionsLeft == 0 ? (
-                    endResult()
+                    <div>
+                      <p>Your total score is: {currentPoints}</p>
+                      <input
+                        type="button"
+                        value="Play Again"
+                        onClick={props.resetGame}
+                      ></input>
+                    </div>
                   ) : (
                     <>
-                      {renderTrivias()}
+                      <RenderTrivias
+                        trivias={trivias}
+                        isDisabled={isDisabled}
+                        wrongAnswer={wrongAnswer}
+                        timerId={timerId}
+                        correctGuesses={correctGuesses}
+                        correctGuessesInARow={correctGuessesInARow}
+                        pointsSystem={props.pointsSystem}
+                        roundCountdown={roundCountdown}
+                        correctAnswerWasPicked={correctAnswerWasPicked}
+                      />
                       {showCountdown && (
                         <div>
                           <p>Time left: {roundCountdown} seconds</p>
