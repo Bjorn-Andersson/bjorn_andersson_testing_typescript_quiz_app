@@ -6,8 +6,8 @@ export default function nextQuestion(
   activeCategory: string,
   selectedRegion: string,
   setTrivias: any,
-  resetRoundCountdown: any,
-  nextQuestionWasTriggered: any
+  resetRoundCountdown: () => void,
+  nextQuestionWasTriggered: () => void
 ) {
   if (amountQuestionsLeft !== 0) {
     let difficulty: string;
