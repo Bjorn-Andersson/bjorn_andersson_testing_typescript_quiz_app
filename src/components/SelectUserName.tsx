@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styling/selects.css";
 
 interface buttonProps {
   usernameWasSet: (username: string) => void;
@@ -30,7 +31,9 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
     return (
       <>
         <h1>
-          <span data-testid="username">Welcome {username}!</span>
+          <span className="username" data-testid="username">
+            Welcome {username}!
+          </span>
         </h1>
       </>
     );
@@ -49,7 +52,7 @@ const SelectUserName: React.FC<buttonProps> = (props) => {
         />
         <button
           data-testid="submitButton"
-          className="submitButton"
+          className="userNameButton"
           disabled={isDisabled}
           type="submit"
         >

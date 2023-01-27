@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.nextButton {
+  height: 50px;
+  width: 150px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: darkcyan;
+  color: yellow;
+  margin-top: 30px;
+}
+.nextButton:focus,
+.nextButton:hover {
+  color: gold !important;
+  background-color: rgb(2, 107, 107);
+}
+.activeCategory {
+  font-size: 40px;
+}
+.points,
+.countdown {
+  font-size: 25px;
+}
+.resultText,
+.timeLeft {
+  font-size: 20px;
+}
+.endResult {
+  font-size: 30px;
+}

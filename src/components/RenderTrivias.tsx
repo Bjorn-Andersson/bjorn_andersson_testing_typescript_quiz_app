@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import correctAnswer from "../functions/correctAnswer";
 import triviaProps from "../interfaces/triviaProps";
 import renderTriviaProps from "../interfaces/renderTriviaProps";
+import "../styling/renderTrivias.css";
 
 const renderTrivias: React.FC<renderTriviaProps> = (props) => {
   const [array, setArray] = useState<string[]>([]);
@@ -24,7 +25,6 @@ const renderTrivias: React.FC<renderTriviaProps> = (props) => {
       setAnswer(trivia.correctAnswer);
     });
     shuffle(valueArray);
-    console.log(valueArray);
     setArray(valueArray);
   }
 
@@ -62,18 +62,20 @@ const renderTrivias: React.FC<renderTriviaProps> = (props) => {
 
   return (
     <>
-      <div>{question}</div>
-      {array.map((answer: string, index: number) => (
-        <div key={index}>
+      <div className="question">{question}</div>
+      <div className="optionsContainer">
+        {array.map((answer: string, index: number) => (
           <button
+            key={index}
+            className="button"
             value={answer}
             disabled={props.isDisabled}
             onClick={checkAnswer}
           >
             {answer}
           </button>
-        </div>
-      ))}
+        ))}
+      </div>
     </>
   );
 };

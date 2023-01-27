@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styling/selects.css";
 
 interface buttonProps {
   difficultyWasSelected: (difficulty: string) => void;
@@ -16,10 +17,10 @@ const SelectDifficulty: React.FC<buttonProps> = (props) => {
 
   function difficultyButtons(difficulty: string, index: number) {
     return (
-      <div className="container" key={index}>
+      <div key={index}>
         <button
           data-testid={difficulty}
-          className="difficultyButton"
+          className="button"
           value={difficulty}
           onClick={handleClick}
         >
@@ -32,11 +33,15 @@ const SelectDifficulty: React.FC<buttonProps> = (props) => {
   return (
     <>
       <h3>Please select difficulty</h3>
-      {difficulties.map(difficultyButtons)}
+      <div className="difficultyContainer">
+        {difficulties.map(difficultyButtons)}
+      </div>
       {difficulty !== "" && (
-        <p>
+        <p className="difficultyText">
           Your selected difficulty is:{" "}
-          <span data-testid="difficulty">{difficulty}</span>
+          <span className="difficulty" data-testid="difficulty">
+            <b>{difficulty}</b>
+          </span>
         </p>
       )}
     </>
