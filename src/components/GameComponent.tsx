@@ -60,8 +60,8 @@ const GameComponent: React.FC<gameProps> = (props) => {
           resetRoundCountdown,
           nextQuestionWasTriggered
         );
-      } catch (err: any) {
-        setErrorMessage(err);
+      } catch (err: unknown) {
+        if (typeof err === "string") setErrorMessage(err);
       }
     }, 3000);
     setTimeout(resetQuestionCountdown, 10);

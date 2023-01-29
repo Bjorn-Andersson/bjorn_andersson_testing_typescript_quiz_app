@@ -81,7 +81,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-//TODO:
-
-//Lägg till readme fil som berättar om appen och vad man behöver göra för att starta den OCH PRESENTATIONEN(se powerpoint filen)
