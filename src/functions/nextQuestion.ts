@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+import triviaProps from "../interfaces/triviaProps";
 import fetchTrivias from "./fetchTrivias";
 
 export default function nextQuestion(
@@ -5,7 +7,7 @@ export default function nextQuestion(
   selectedDifficulty: string,
   activeCategory: string,
   selectedRegion: string,
-  setTrivias: any,
+  setTrivias: Dispatch<SetStateAction<triviaProps[]>>,
   resetRoundCountdown: () => void,
   nextQuestionWasTriggered: () => void
 ) {
